@@ -3,12 +3,15 @@
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getCookie, generateEventId } from "@/lib/fb-tracking";
+import { useUTMTracking } from "@/lib/hooks/use-utm-tracking";
+import { saveFormSubmission } from "@/lib/actions/form-actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
 export function ContactForm() {
   const [loading, setLoading] = useState(false);
+  const utmParams = useUTMTracking();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -17,17 +20,44 @@ export function ContactForm() {
     const formData = new FormData(e.currentTarget);
     const data = Object.fromEntries(formData.entries());
 
+    const fbp = getCookie("_fbp");
+    const fbc = getCookie("_fbc");
+    const event_id = generateEventId();
+    const page_url = window.location.href;
+    const user_agent = navigator.userAgent;
+
+    // Save to database
+    try {
+      await saveFormSubmission({
+        name: data.name as string,
+        email: data.email as string,
+        phone: data.phone as string,
+        motivo: data.motivo as string,
+        referrer: utmParams.referrer,
+        utm_medium: utmParams.utm_medium,
+        utm_campaign: utmParams.utm_campaign,
+        utm_content: utmParams.utm_content,
+        fbp,
+        fbc,
+        event_id,
+        page_url,
+        user_agent,
+      });
+    } catch (error) {
+      console.error("Database save error:", error);
+    }
+
+    // Send to Elementor webhook
     const apiPayload = new URLSearchParams();
     apiPayload.append("form_fields[nome]", data.name as string);
     apiPayload.append("form_fields[email]", data.email as string);
     apiPayload.append("form_fields[celular]", data.phone as string);
     apiPayload.append("form_fields[motivo]", data.motivo as string);
-
-    apiPayload.append("form_fields[fbp]", getCookie("_fbp"));
-    apiPayload.append("form_fields[fbc]", getCookie("_fbc"));
-    apiPayload.append("form_fields[event_id]", generateEventId());
-    apiPayload.append("form_fields[page_url]", window.location.href);
-    apiPayload.append("form_fields[user_agent]", navigator.userAgent);
+    apiPayload.append("form_fields[fbp]", fbp);
+    apiPayload.append("form_fields[fbc]", fbc);
+    apiPayload.append("form_fields[event_id]", event_id);
+    apiPayload.append("form_fields[page_url]", page_url);
+    apiPayload.append("form_fields[user_agent]", user_agent);
 
     try {
       await fetch("https://your-worker-url.workers.dev/elementor-lead", {
@@ -41,6 +71,7 @@ export function ContactForm() {
       console.error("CAPI Error:", error);
     }
 
+    // Redirect to WhatsApp
     const whatsappNumber = "5521989889898";
     const message = `Olá, tudo bem? Venho através do Site Domínio Soluções, Meu nome é "${data.name}" Telefone: ${data.phone} E-mail: ${data.email} O motivo do meu contato é: ${data.motivo}`;
 

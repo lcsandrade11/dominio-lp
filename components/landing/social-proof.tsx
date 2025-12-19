@@ -1,18 +1,18 @@
 import Image from "next/image";
 
 const clients = [
-  { name: "COAD Educação", logo: "/coad-educacao.webp" },
-  { name: "Condor Travel", logo: "/condortravel.webp" },
-  { name: "Couto Baptista", logo: "/couto-baptista.webp" },
-  { name: "Diário Comercial", logo: "/diario-comercial.webp" },
-  { name: "EPE", logo: "/epe.webp" },
-  { name: "Galperti", logo: "/galperti.webp" },
-  { name: "GEM", logo: "/gem.webp" },
-  { name: "GGBE", logo: "/ggbe.webp" },
-  { name: "Luz Publicidade", logo: "/luz-publicidade.webp" },
-  { name: "Offshore Reparos Navais", logo: "/offshore-reparos-navais.webp" },
-  { name: "OSM Thome", logo: "/osm-thome.webp" },
-  { name: "Zmax Group", logo: "/zmax-group.webp" },
+  { name: "COAD Educação", logo: "/clients/coad-educacao.webp" },
+  { name: "Condor Travel", logo: "/clients/condortravel.webp" },
+  { name: "Couto Baptista", logo: "/clients/couto-baptista.webp" },
+  { name: "Diário Comercial", logo: "/clients/diario-comercial.webp" },
+  { name: "EPE", logo: "/clients/epe.webp" },
+  { name: "Galperti", logo: "/clients/galperti.webp" },
+  { name: "GEM", logo: "/clients/gem.webp" },
+  { name: "GGBE", logo: "/clients/ggbe.webp" },
+  { name: "Luz Publicidade", logo: "/clients/luz-publicidade.webp" },
+  { name: "Offshore Reparos Navais", logo: "/clients/offshore-reparos-navais.webp" },
+  { name: "OSM Thome", logo: "/clients/osm-thome.webp" },
+  { name: "Zmax Group", logo: "/clients/zmax-group.webp" },
 ];
 
 export function SocialProof() {

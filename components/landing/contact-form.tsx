@@ -72,7 +72,7 @@ export function ContactForm() {
     }
 
     // Redirect to WhatsApp
-    const whatsappNumber = "5521989889898";
+    const whatsappNumber = "5521973514867";
     const message = `Olá, tudo bem? Venho através do Site Domínio Soluções, Meu nome é "${data.name}" Telefone: ${data.phone} E-mail: ${data.email} O motivo do meu contato é: ${data.motivo}`;
 
     const encodedMessage = encodeURIComponent(message);

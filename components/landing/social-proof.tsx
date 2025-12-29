@@ -10,7 +10,10 @@ const clients = [
   { name: "GEM", logo: "/clients/gem.webp" },
   { name: "GGBE", logo: "/clients/ggbe.webp" },
   { name: "Luz Publicidade", logo: "/clients/luz-publicidade.webp" },
-  { name: "Offshore Reparos Navais", logo: "/clients/offshore-reparos-navais.webp" },
+  {
+    name: "Offshore Reparos Navais",
+    logo: "/clients/offshore-reparos-navais.webp",
+  },
   { name: "OSM Thome", logo: "/clients/osm-thome.webp" },
   { name: "Zmax Group", logo: "/clients/zmax-group.webp" },
 ];

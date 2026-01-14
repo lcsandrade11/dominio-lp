@@ -10,16 +10,16 @@ export function Hero() {
         }}
       />
 
-      <div className="container mx-auto max-w-7xl px-4 py-12 lg:py-24 relative z-10">
+      <div className="container mx-auto max-w-7xl px-4 pt-24 pb-12 sm:pt-28 lg:pt-32 lg:pb-24 relative z-10">
         <div className="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
           {/* Left Column: Text */}
-          <div className="space-y-8 max-w-2xl">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-16 text-[#1a2b4b]">
+          <div className="space-y-6 max-w-2xl">
+            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-[1.1] text-[#1a2b4b]">
               Sua empresa fatura bem, mas o{" "}
               <span className="text-[#335B9B]">lucro some</span> na burocracia?
             </h1>
 
-            <p className="text-lg md:text-xl text-slate-500 leading-relaxed max-w-xl">
+            <p className="text-lg md:text-xl text-slate-500 leading-normal max-w-xl">
               Pare de pagar até 15% a mais de impostos. Com processos digitais e
               automação, você ganha mais segurança, economia e praticidade no
               dia a dia.

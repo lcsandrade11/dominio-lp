@@ -114,7 +114,7 @@ export function ContactForm() {
               Pronto para parar de perder dinheiro?
             </h2>
             <p className="text-blue-100 text-lg">
-              Preencha o formulário para receber uma análise...
+              Preencha o formulário para receber uma análise.
             </p>
           </div>
 

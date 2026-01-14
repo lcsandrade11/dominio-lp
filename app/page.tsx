@@ -14,9 +14,9 @@ export default function LandingPage() {
           <img
             src="/logo_dominio.webp"
             alt="Domínio Soluções"
-            width={150}
-            height={40}
-            className="h-10 w-auto"
+            width={180}
+            height={48}
+            className="h-12 w-auto"
           />
 
           <a

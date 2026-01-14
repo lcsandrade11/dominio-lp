@@ -35,7 +35,7 @@ export function SocialProof() {
       </div>
 
       <div className="container mx-auto px-4 text-center">
-        <p className="text-sm font-semibold text-slate-500 mb-8 uppercase tracking-wider">
+        <p className="text-base font-semibold text-slate-500 mb-10 uppercase tracking-wider">
           Empresas que confiam na Domínio Soluções
         </p>
 
@@ -46,14 +46,14 @@ export function SocialProof() {
               {clients.map((client) => (
                 <div
                   key={`${client.name}-1`}
-                  className="shrink-0 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+                  className="shrink-0"
                 >
                   <Image
                     src={client.logo}
                     alt={client.name}
-                    width={160}
-                    height={80}
-                    className="h-16 w-auto object-contain"
+                    width={180}
+                    height={90}
+                    className="h-20 w-auto object-contain"
                   />
                 </div>
               ))}
@@ -63,14 +63,14 @@ export function SocialProof() {
               {clients.map((client) => (
                 <div
                   key={`${client.name}-2`}
-                  className="shrink-0 grayscale opacity-60 hover:grayscale-0 hover:opacity-100 transition-all duration-300"
+                  className="shrink-0"
                 >
                   <Image
                     src={client.logo}
                     alt={client.name}
-                    width={160}
-                    height={80}
-                    className="h-16 w-auto object-contain"
+                    width={180}
+                    height={90}
+                    className="h-20 w-auto object-contain"
                   />
                 </div>
               ))}

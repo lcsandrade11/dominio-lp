@@ -29,14 +29,14 @@ export function Solution() {
               Mais que contabilidade: <br />
               <span className="text-[#335B9B]">Inteligência de Negócios.</span>
             </h2>
-            <p className="text-slate-600 text-lg mb-8 leading-relaxed">
+            <p className="text-slate-600 text-lg mb-6 leading-normal">
               Enquanto a contabilidade tradicional apenas "entrega guias", a
               Domínio Soluções usa tecnologia de ponta para auditar sua empresa
               preventivamente. Não somos uma startup aventureira, temos 20 anos
               de mercado.
             </p>
 
-            <ul className="space-y-4 mb-8">
+            <ul className="space-y-3 mb-6">
               {benefits.map((item) => (
                 <li key={item} className="flex items-center gap-3">
                   <div className="h-6 w-6 rounded-full bg-green-100 flex items-center justify-center shrink-0">
@@ -53,15 +53,15 @@ export function Solution() {
             />
           </div>
 
-          <div className="bg-slate-50 rounded-3xl p-8 border border-slate-100">
-            <h3 className="text-sm font-semibold text-slate-500 uppercase tracking-wider mb-8 text-center">
+          <div className="bg-slate-50 rounded-3xl p-6 border border-slate-100">
+            <h3 className="text-base font-semibold text-slate-500 uppercase tracking-wider mb-6 text-center">
               Tecnologia e Parceiros Oficiais
             </h3>
-            <div className="grid grid-cols-2 gap-8 opacity-70 grayscale hover:grayscale-0 transition-all duration-500">
+            <div className="grid grid-cols-2 gap-4">
               {partners.map((partner) => (
                 <div
                   key={partner.name}
-                  className="h-16 flex items-center justify-center"
+                  className="h-20 flex items-center justify-center"
                 >
                   <img
                     src={partner.logo}

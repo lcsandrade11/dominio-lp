@@ -1,4 +1,5 @@
 import { ContactForm } from "@/components/landing/contact-form";
+import { Experience } from "@/components/landing/experience";
 import { FAQ } from "@/components/landing/faq";
 import { Hero } from "@/components/landing/hero";
 import { PainPoints } from "@/components/landing/pain-points";
@@ -32,6 +33,7 @@ export default function LandingPage() {
       <SocialProof />
       <PainPoints />
       <Solution />
+      <Experience />
       <FAQ />
       <ContactForm />
 
@@ -41,6 +43,9 @@ export default function LandingPage() {
           <p>
             © {new Date().getFullYear()} Domínio Soluções BPO. Todos os direitos
             reservados.
+          </p>
+          <p className="mt-1">
+            CNPJ: 34.749.735/0001-34
           </p>
         </div>
       </footer>

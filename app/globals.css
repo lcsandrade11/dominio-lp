@@ -122,6 +122,10 @@
     body {
         @apply bg-background text-foreground;
     }
+    button:not([disabled]),
+    [role="button"]:not([disabled]) {
+        cursor: pointer;
+    }
 }
 
 @keyframes infinite-scroll {
@@ -146,8 +150,8 @@
     animation: infinite-scroll 30s linear infinite;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 767px) {
     .animate-infinite-scroll {
-        animation: infinite-scroll-mobile 35s linear infinite;
+        animation: infinite-scroll-mobile 20s linear infinite;
     }
 }

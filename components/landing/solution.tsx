@@ -49,11 +49,11 @@ export function Solution() {
 
             <ContactFormDialog
               triggerText="Solicitar Proposta"
-              triggerClassName="bg-[#335B9B] hover:bg-[#2d4373] text-white font-bold h-12 px-6 rounded-md shadow-lg transition-all"
+              triggerClassName="bg-[#335B9B] hover:bg-[#2d4373] text-white font-bold h-12 px-16 rounded-md shadow-lg transition-all"
             />
           </div>
 
-          <div className="bg-slate-50 rounded-3xl p-6 border border-slate-100">
+          <div className="bg-white rounded-3xl p-6 border border-slate-200">
             <h3 className="text-base font-semibold text-slate-500 uppercase tracking-wider mb-6 text-center">
               Tecnologia e Parceiros Oficiais
             </h3>

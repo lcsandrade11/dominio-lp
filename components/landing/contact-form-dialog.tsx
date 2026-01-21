@@ -90,6 +90,7 @@ export function ContactFormDialog({
     const message = `Olá, tudo bem? Venho através do Site Domínio Soluções, Meu nome é "${data.name}" Telefone: ${data.phone} E-mail: ${data.email} O motivo do meu contato é: ${data.motivo}`;
 
     const encodedMessage = encodeURIComponent(message);
+    window.dataLayer?.push({ event: "click_whatsapp" });
     window.location.href = `https://wa.me/${whatsappNumber}?text=${encodedMessage}`;
   };
 

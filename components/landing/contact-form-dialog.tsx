@@ -15,6 +15,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { getCookie, generateEventId } from "@/lib/fb-tracking";
+import { useUTMTracking } from "@/lib/hooks/use-utm-tracking";
+import { saveFormSubmission } from "@/lib/actions/form-actions";
 import {
   contactSchema,
   type ContactFormValues,
@@ -31,6 +33,7 @@ export function ContactFormDialog({
 }: ContactFormDialogProps) {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [open, setOpen] = useState(false);
+  const utmParams = useUTMTracking();
 
   const {
     register,
@@ -59,19 +62,44 @@ export function ContactFormDialog({
   const onSubmit = async (data: ContactFormValues) => {
     setIsSubmitting(true);
 
+    const fbp = getCookie("_fbp");
+    const fbc = getCookie("_fbc");
+    const event_id = generateEventId();
+    const page_url = window.location.href;
+    const user_agent = navigator.userAgent;
+
+    // Save to database and Google Sheets
+    try {
+      await saveFormSubmission({
+        name: data.name,
+        email: data.email,
+        phone: data.phone,
+        motivo: data.motivo,
+        referrer: utmParams.referrer,
+        utm_medium: utmParams.utm_medium,
+        utm_campaign: utmParams.utm_campaign,
+        utm_content: utmParams.utm_content,
+        fbp,
+        fbc,
+        event_id,
+        page_url,
+        user_agent,
+      });
+    } catch (error) {
+      console.error("Database save error:", error);
+    }
+
     // Prepare Data for API (Elementor Format)
     const apiPayload = new URLSearchParams();
     apiPayload.append("form_fields[nome]", data.name);
     apiPayload.append("form_fields[email]", data.email);
     apiPayload.append("form_fields[celular]", data.phone);
     apiPayload.append("form_fields[motivo]", data.motivo);
-
-    // Tracking Data
-    apiPayload.append("form_fields[fbp]", getCookie("_fbp"));
-    apiPayload.append("form_fields[fbc]", getCookie("_fbc"));
-    apiPayload.append("form_fields[event_id]", generateEventId());
-    apiPayload.append("form_fields[page_url]", window.location.href);
-    apiPayload.append("form_fields[user_agent]", navigator.userAgent);
+    apiPayload.append("form_fields[fbp]", fbp);
+    apiPayload.append("form_fields[fbc]", fbc);
+    apiPayload.append("form_fields[event_id]", event_id);
+    apiPayload.append("form_fields[page_url]", page_url);
+    apiPayload.append("form_fields[user_agent]", user_agent);
 
     try {
       await fetch(

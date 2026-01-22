@@ -74,13 +74,16 @@ export function ContactFormDialog({
     apiPayload.append("form_fields[user_agent]", navigator.userAgent);
 
     try {
-      await fetch("https://your-worker-url.workers.dev/elementor-lead", {
-        method: "POST",
-        body: apiPayload,
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+      await fetch(
+        "https://dominio-api.core-team-eef.workers.dev/elementor-lead",
+        {
+          method: "POST",
+          body: apiPayload,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
         },
-      });
+      );
     } catch (error) {
       console.error("CAPI Error:", error);
     }

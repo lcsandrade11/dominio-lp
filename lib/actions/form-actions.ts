@@ -26,9 +26,9 @@ async function pushToGoogleSheets(data: {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        "X-Secret-Token": SHEET_SECRET,
       },
       body: JSON.stringify({
-        "X-Secret-Token": SHEET_SECRET,
         timestamp: new Date().toISOString(),
         name: data.name,
         email: data.email,

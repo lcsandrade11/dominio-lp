@@ -9,9 +9,14 @@ function normalizeEnvValue(value?: string) {
   return trimmed.replace(/^['"]|['"]$/g, "");
 }
 
+function isAllowedGoogleSheetsWebhookHost(host: string) {
+  return host === "script.google.com" || host.endsWith(".googleusercontent.com");
+}
+
 async function fetchPreserveMethodOnRedirect(
   url: string,
   init: RequestInit,
+  debug = false,
   maxRedirects = 5,
 ) {
   let currentUrl = url;
@@ -30,11 +35,18 @@ async function fetchPreserveMethodOnRedirect(
       if (!location) return response;
 
       const nextUrl = new URL(location, currentUrl);
-      console.warn("Google Sheets webhook redirected", {
-        status: response.status,
-        host: nextUrl.host,
-        pathname: nextUrl.pathname,
-      });
+      if (!isAllowedGoogleSheetsWebhookHost(nextUrl.host)) {
+        throw new Error(
+          `Unexpected redirect host when calling Google Sheets webhook: ${nextUrl.host}`,
+        );
+      }
+      if (debug) {
+        console.warn("Google Sheets webhook redirected", {
+          status: response.status,
+          host: nextUrl.host,
+          pathname: nextUrl.pathname,
+        });
+      }
       currentUrl = nextUrl.toString();
       continue;
     }
@@ -59,6 +71,7 @@ async function pushToGoogleSheets(data: {
     process.env.GOOGLE_SHEET_WEBHOOK_URL,
   );
   const SHEET_SECRET = normalizeEnvValue(process.env.GOOGLE_SHEET_SECRET);
+  const debug = normalizeEnvValue(process.env.GOOGLE_SHEETS_DEBUG) === "1";
 
   if (!SHEET_WEBHOOK_URL || !SHEET_SECRET) {
     console.warn("Google Sheets credentials not configured", {
@@ -71,10 +84,24 @@ async function pushToGoogleSheets(data: {
   try {
     // Validate URL early for clearer error logs (common issue: quotes copied into prod env vars).
     const webhookUrl = new URL(SHEET_WEBHOOK_URL);
-    console.info("Google Sheets webhook configured", {
-      host: webhookUrl.host,
-      pathname: webhookUrl.pathname,
-    });
+    if (webhookUrl.protocol !== "https:") {
+      console.error("Invalid GOOGLE_SHEET_WEBHOOK_URL protocol", {
+        protocol: webhookUrl.protocol,
+      });
+      return;
+    }
+    if (!isAllowedGoogleSheetsWebhookHost(webhookUrl.host)) {
+      console.error("Invalid GOOGLE_SHEET_WEBHOOK_URL host", {
+        host: webhookUrl.host,
+      });
+      return;
+    }
+    if (debug) {
+      console.info("Google Sheets webhook configured", {
+        host: webhookUrl.host,
+        pathname: webhookUrl.pathname,
+      });
+    }
   } catch (error) {
     console.error("Invalid GOOGLE_SHEET_WEBHOOK_URL", { error });
     return;
@@ -101,7 +128,7 @@ async function pushToGoogleSheets(data: {
       },
       signal: AbortSignal.timeout(8000),
       body,
-    });
+    }, debug);
 
     const contentType = response.headers.get("content-type") || "";
     const bodyText = await response.text();
@@ -109,9 +136,13 @@ async function pushToGoogleSheets(data: {
     if (!contentType.includes("application/json")) {
       console.error("Unexpected Google Sheets response", {
         status: response.status,
-        url: response.url,
         contentType,
-        bodySnippet: bodyText.slice(0, 200),
+        ...(debug
+          ? {
+              url: response.url,
+              bodySnippet: bodyText.slice(0, 200),
+            }
+          : null),
       });
       return;
     }

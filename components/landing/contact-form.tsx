@@ -1,23 +1,25 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMask } from "@react-input/mask";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Loader2 } from "lucide-react";
+import { useRef, useState } from "react";
+import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { getCookie, generateEventId } from "@/lib/fb-tracking";
-import { useUTMTracking } from "@/lib/hooks/use-utm-tracking";
 import { saveFormSubmission } from "@/lib/actions/form-actions";
+import { generateEventId, getCookie } from "@/lib/fb-tracking";
+import { useUTMTracking } from "@/lib/hooks/use-utm-tracking";
 import {
-  contactSchema,
   type ContactFormValues,
+  contactSchema,
 } from "@/lib/schemas/contact-schema";
 
 export function ContactForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const isSubmittingRef = useRef(false);
   const utmParams = useUTMTracking();
 
   const {
@@ -44,6 +46,8 @@ export function ContactForm() {
   const { ref: phoneRhfRef, ...phoneRegister } = register("phone");
 
   const onSubmit = async (data: ContactFormValues) => {
+    if (isSubmittingRef.current) return;
+    isSubmittingRef.current = true;
     setIsSubmitting(true);
 
     const fbp = getCookie("_fbp");
@@ -248,8 +252,12 @@ export function ContactForm() {
                 <Button
                   type="submit"
                   disabled={isSubmitting}
+                  aria-busy={isSubmitting}
                   className="w-full bg-green-600 hover:bg-green-700 text-white font-bold h-12 text-lg"
                 >
+                  {isSubmitting && (
+                    <Loader2 className="animate-spin" aria-hidden="true" />
+                  )}
                   {isSubmitting ? "Enviando..." : "Falar com Especialista"}
                 </Button>
               </form>

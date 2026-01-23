@@ -9,6 +9,42 @@ function normalizeEnvValue(value?: string) {
   return trimmed.replace(/^['"]|['"]$/g, "");
 }
 
+async function fetchPreserveMethodOnRedirect(
+  url: string,
+  init: RequestInit,
+  maxRedirects = 5,
+) {
+  let currentUrl = url;
+
+  for (let redirectCount = 0; redirectCount <= maxRedirects; redirectCount += 1) {
+    const response = await fetch(currentUrl, { ...init, redirect: "manual" });
+
+    if (
+      response.status === 301 ||
+      response.status === 302 ||
+      response.status === 303 ||
+      response.status === 307 ||
+      response.status === 308
+    ) {
+      const location = response.headers.get("location");
+      if (!location) return response;
+
+      const nextUrl = new URL(location, currentUrl);
+      console.warn("Google Sheets webhook redirected", {
+        status: response.status,
+        host: nextUrl.host,
+        pathname: nextUrl.pathname,
+      });
+      currentUrl = nextUrl.toString();
+      continue;
+    }
+
+    return response;
+  }
+
+  throw new Error(`Too many redirects when calling ${new URL(url).host}`);
+}
+
 async function pushToGoogleSheets(data: {
   name: string;
   email: string;
@@ -34,32 +70,37 @@ async function pushToGoogleSheets(data: {
 
   try {
     // Validate URL early for clearer error logs (common issue: quotes copied into prod env vars).
-    new URL(SHEET_WEBHOOK_URL);
+    const webhookUrl = new URL(SHEET_WEBHOOK_URL);
+    console.info("Google Sheets webhook configured", {
+      host: webhookUrl.host,
+      pathname: webhookUrl.pathname,
+    });
   } catch (error) {
     console.error("Invalid GOOGLE_SHEET_WEBHOOK_URL", { error });
     return;
   }
 
   try {
-    const response = await fetch(SHEET_WEBHOOK_URL, {
+    const body = JSON.stringify({
+      "X-Secret-Token": SHEET_SECRET,
+      timestamp: new Date().toISOString(),
+      name: data.name,
+      email: data.email,
+      phone: data.phone,
+      motivo: data.motivo,
+      utm_medium: data.utm_medium || "",
+      utm_campaign: data.utm_campaign || "",
+      utm_content: data.utm_content || "",
+      referrer: data.referrer || "",
+    });
+
+    const response = await fetchPreserveMethodOnRedirect(SHEET_WEBHOOK_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      redirect: "follow",
       signal: AbortSignal.timeout(8000),
-      body: JSON.stringify({
-        "X-Secret-Token": SHEET_SECRET,
-        timestamp: new Date().toISOString(),
-        name: data.name,
-        email: data.email,
-        phone: data.phone,
-        motivo: data.motivo,
-        utm_medium: data.utm_medium || "",
-        utm_campaign: data.utm_campaign || "",
-        utm_content: data.utm_content || "",
-        referrer: data.referrer || "",
-      }),
+      body,
     });
 
     const contentType = response.headers.get("content-type") || "";
@@ -68,6 +109,7 @@ async function pushToGoogleSheets(data: {
     if (!contentType.includes("application/json")) {
       console.error("Unexpected Google Sheets response", {
         status: response.status,
+        url: response.url,
         contentType,
         bodySnippet: bodyText.slice(0, 200),
       });

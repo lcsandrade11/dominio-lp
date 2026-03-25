@@ -10,7 +10,9 @@ function normalizeEnvValue(value?: string) {
 }
 
 function isAllowedGoogleSheetsWebhookHost(host: string) {
-  return host === "script.google.com" || host.endsWith(".googleusercontent.com");
+  return (
+    host === "script.google.com" || host.endsWith(".googleusercontent.com")
+  );
 }
 
 async function fetchPreserveMethodOnRedirect(
@@ -21,7 +23,11 @@ async function fetchPreserveMethodOnRedirect(
 ) {
   let currentUrl = url;
 
-  for (let redirectCount = 0; redirectCount <= maxRedirects; redirectCount += 1) {
+  for (
+    let redirectCount = 0;
+    redirectCount <= maxRedirects;
+    redirectCount += 1
+  ) {
     const response = await fetch(currentUrl, { ...init, redirect: "manual" });
 
     if (
@@ -121,14 +127,18 @@ async function pushToGoogleSheets(data: {
       referrer: data.referrer || "",
     });
 
-    const response = await fetchPreserveMethodOnRedirect(SHEET_WEBHOOK_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetchPreserveMethodOnRedirect(
+      SHEET_WEBHOOK_URL,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        signal: AbortSignal.timeout(8000),
+        body,
       },
-      signal: AbortSignal.timeout(8000),
-      body,
-    }, debug);
+      debug,
+    );
 
     const contentType = response.headers.get("content-type") || "";
     const bodyText = await response.text();

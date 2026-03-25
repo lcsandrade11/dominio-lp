@@ -44,9 +44,7 @@ export default function LandingPage() {
             © {new Date().getFullYear()} Domínio Soluções BPO. Todos os direitos
             reservados.
           </p>
-          <p className="mt-1">
-            CNPJ: 34.749.735/0001-34
-          </p>
+          <p className="mt-1">CNPJ: 34.749.735/0001-34</p>
         </div>
       </footer>
     </main>

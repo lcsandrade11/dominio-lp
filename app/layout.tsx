@@ -9,7 +9,8 @@ const jost = Jost({
 });
 
 export const metadata: Metadata = {
-  title: "Contabilidade Estratégica para PMEs | Domínio Soluções BPO & Tax Consult",
+  title:
+    "Contabilidade Estratégica para PMEs | Domínio Soluções BPO & Tax Consult",
   description:
     "Reduza até 15% da sua carga tributária com contabilidade digital e consultoria fiscal especializada para pequenas e médias empresas. Automatização de processos, compliance e otimização tributária.",
   keywords: [
